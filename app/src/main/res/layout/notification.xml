@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
+
+
+    <ImageView
+        android:id="@+id/notify_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@mipmap/notify_image"
+        android:scaleType="centerInside"
+        />
+
+    <TextView
+        android:id="@+id/notify_title"
+        android:layout_toRightOf="@id/notify_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="10dp"
+        android:textSize="15sp"
+        android:text="Title " />
+
+    <TextView
+        android:id="@+id/notify_content"
+        android:layout_below="@id/notify_title"
+        android:layout_toRightOf="@id/notify_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:textSize="10sp"
+        android:textColor="#ff00b2ff"
+        android:layout_marginTop="5dp"
+        android:text="Title  content " />
+
+    <TextView
+        android:id="@+id/notify_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="15sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="20dp"
+        android:text="time " />
+
+
+
+
+</RelativeLayout>

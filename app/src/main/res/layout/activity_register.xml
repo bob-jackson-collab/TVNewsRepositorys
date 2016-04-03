@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ys.tvnews.views.TitleViews
+        android:id="@+id/register_title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+    </com.ys.tvnews.views.TitleViews>
+
+    <EditText
+        android:id="@+id/user_phone"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:hint="输入手机号"
+        android:layout_marginTop="@dimen/activity_register_margintop"
+        android:layout_marginLeft="@dimen/activity_register_marginleft"
+        android:layout_marginRight="@dimen/activity_register_marginright"
+        android:background="@drawable/edit_shape"
+        android:textColorHint="#66000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="@dimen/activity_register_margintop"
+        android:layout_marginLeft="@dimen/activity_register_marginleft"
+        android:layout_marginRight="@dimen/activity_register_marginright"
+        android:orientation="horizontal">
+    <EditText
+        android:id="@+id/register_code"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:hint="输入收到的验证码"
+        android:background="@drawable/edit_shape"
+        android:textColorHint="#66000000" />
+        <Button
+            android:id="@+id/img_accept_code"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@mipmap/fasongyzm"
+            android:scaleType="fitXY"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_login_margintop"
+        android:layout_marginLeft="@dimen/activity_login_marginleft"
+        android:layout_marginRight="@dimen/activity_login_marginright"
+        android:enabled="false"
+        android:text="下一步"
+        android:textSize="20sp"
+        android:textColor="#ffffffff"
+        android:background="@drawable/register_btn_seleced"/>
+
+</LinearLayout>

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <com.ys.tvnews.views.PersonalScrollView
+        android:id="@+id/person_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <ImageView
+                android:id="@+id/person_img_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@mipmap/bg_user_photo"
+                android:layout_alignParentTop="true" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/touxiangkuang"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="35dp"
+                android:scaleType="centerCrop"
+                android:id="@+id/imageView" />
+
+            <ImageView
+                android:id="@+id/user_head_img"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@mipmap/touxiang"
+                android:scaleType="fitXY"
+                android:layout_alignTop="@+id/imageView"
+                android:layout_alignEnd="@+id/imageView" />
+
+            <Button
+                android:id="@+id/btn_quick_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/setting_login"
+                android:layout_marginTop="6dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/user_head_img"/>
+
+            <LinearLayout
+                android:id="@+id/linear_personal1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/person_img_bg"
+                android:layout_marginTop="15dp"
+                android:background="#ffffff"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <TextView
+                    android:id="@+id/scan_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:textSize="17sp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:drawableLeft="@mipmap/icon_setting_scan"
+                    android:text="扫一扫"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:drawableLeft="@mipmap/icon_setting_search"
+                    android:textSize="17sp"
+                    android:padding="10dp"
+                    android:text="搜索内容"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:drawableLeft="@mipmap/icon_setting_history"
+                    android:textSize="17sp"
+                    android:text="历史记录"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <TextView
+                    android:id="@+id/collect_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:drawableLeft="@mipmap/icon_setting_my_fav"
+                    android:textSize="17sp"
+                    android:text="我的收藏"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_personal2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_personal1"
+                android:layout_marginTop="15dp"
+                android:background="#ffffff"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:textSize="17sp"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:drawableLeft="@mipmap/icon_setting_news_push"
+                        android:text="要闻推送"/>
+                    <ToggleButton
+                        android:id="@+id/push_news_toggle"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/toggle_button_selected"
+                        android:checked="true"
+                        android:textOff=""
+                        android:textOn=""/>
+
+               </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:textSize="17sp"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:drawableLeft="@mipmap/icon_setting_no_image_model"
+                        android:text="无图模式"/>
+                    <ToggleButton
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/toggle_button_selected"
+                        android:checked="false"
+                        android:textOff=""
+                        android:textOn=""/>
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:textSize="17sp"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:drawableLeft="@mipmap/icon_setting_night_model"
+                        android:text="夜间模式"/>
+                    <ToggleButton
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/toggle_button_selected"
+                        android:checked="false"
+                        android:textOff=""
+                        android:textOn=""/>
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:textSize="17sp"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:drawableLeft="@mipmap/icon_setting_net_alert"
+                        android:text="使用移动网络不在提醒"/>
+                    <ToggleButton
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/toggle_button_selected"
+                        android:checked="false"
+                        android:textOff=""
+                        android:textOn=""/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_clear_cache"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_below="@id/linear_personal2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:drawableLeft="@mipmap/icon_setting_clear_cache"
+                    android:textSize="17sp"
+                    android:text="清除缓存"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textSize="15sp"
+                    android:textColor="#bb0000ff"
+                    android:text="文件缓存大小"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_personal3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/linear_clear_cache"
+                android:layout_marginTop="15dp"
+                android:background="#ffffff"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:textSize="17sp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:drawableLeft="@mipmap/icon_setting_app_recommend"
+                    android:text="应用推荐"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:drawableLeft="@mipmap/icon_setting_feedback"
+                    android:textSize="17sp"
+                    android:padding="10dp"
+                    android:text="意见反馈"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <TextView
+                    android:id="@+id/tv_check_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:drawableLeft="@mipmap/icon_setting_update"
+                    android:textSize="17sp"
+                    android:text="检测新版本"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:drawableLeft="@mipmap/icon_setting_attention"
+                    android:textSize="17sp"
+                    android:text="关注央视新闻"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33000000" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:drawableLeft="@mipmap/icon_setting_about"
+                    android:textSize="17sp"
+                    android:text="关于"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+    </com.ys.tvnews.views.PersonalScrollView>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dip" >
+        <com.ys.tvnews.views.TitleViews
+            android:id="@+id/title_personal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff">
+
+        </com.ys.tvnews.views.TitleViews>
+    </FrameLayout>
+
+</RelativeLayout>

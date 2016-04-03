@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <com.ys.tvnews.views.TitleViews
+        android:id="@+id/span_title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+    </com.ys.tvnews.views.TitleViews>
+    <LinearLayout
+        android:id="@+id/span_linear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/span_title"
+        android:orientation="vertical">
+
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="将二维码图案放入取景框内，即可自动扫描"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textSize="19sp"/>
+
+</RelativeLayout>

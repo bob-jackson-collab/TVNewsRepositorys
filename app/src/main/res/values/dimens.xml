@@ -1,0 +1,15 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- 登录中的间距 -->
+    <dimen name="activity_login_marginleft">15dp</dimen>
+    <dimen name="activity_login_marginright">15dp</dimen>
+    <dimen name="activity_login_margintop">20dp</dimen>
+
+    <!-- 注册中的间距 -->
+    <dimen name="activity_register_marginleft">15dp</dimen>
+    <dimen name="activity_register_marginright">15dp</dimen>
+    <dimen name="activity_register_margintop">20dp</dimen>
+</resources>

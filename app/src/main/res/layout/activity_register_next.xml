@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.ys.tvnews.views.TitleViews
+        android:id="@+id/register_next_title"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+    </com.ys.tvnews.views.TitleViews>
+
+
+    <EditText
+        android:id="@+id/user_passwd"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:hint="输入至少6位密码"
+        android:layout_marginTop="@dimen/activity_register_margintop"
+        android:layout_marginLeft="@dimen/activity_register_marginleft"
+        android:layout_marginRight="@dimen/activity_register_marginright"
+        android:background="@drawable/edit_shape"
+        android:textColorHint="#66000000" />
+    <EditText
+        android:id="@+id/user_confirm_passwd"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:hint="再次确认密码"
+        android:layout_marginTop="@dimen/activity_register_margintop"
+        android:layout_marginLeft="@dimen/activity_register_marginleft"
+        android:layout_marginRight="@dimen/activity_register_marginright"
+        android:background="@drawable/edit_shape"
+        android:textColorHint="#66000000" />
+
+    <CheckBox
+        android:id="@+id/check_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="@dimen/activity_register_margintop"
+        android:layout_marginLeft="@dimen/activity_register_marginleft"
+        android:layout_marginRight="@dimen/activity_register_marginright"
+        android:text="我已阅并同意《央视网络服务使用协议》"
+        />
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_login_margintop"
+        android:layout_marginLeft="@dimen/activity_login_marginleft"
+        android:layout_marginRight="@dimen/activity_login_marginright"
+        android:enabled="false"
+        android:text="注册"
+        android:textSize="20sp"
+        android:textColor="#ffffffff"
+        android:background="@drawable/register_btn_seleced"/>
+
+</LinearLayout>

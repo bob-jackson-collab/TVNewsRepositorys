@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <!--主要演示极光推送的内部机制 -->
+    <Button
+        android:id="@+id/send_notify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_notify"
+        android:layout_marginTop="10dp"
+        android:text="发送通知"/>
+
+    <Button
+        android:id="@+id/send_custom_notify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_notify"
+        android:text="发送自定义消息通知"/>
+
+
+
+    <Button
+        android:id="@+id/send_media_notify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_notify"
+        android:text="发送多媒体通知"/>
+
+</LinearLayout>
