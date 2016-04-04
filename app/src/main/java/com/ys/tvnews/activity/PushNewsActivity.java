@@ -104,6 +104,7 @@ public class PushNewsActivity extends Activity {
         list_push_news = new ArrayList<>();
 
         try {
+            //mDbutils weikong
             list_push_news = mDbUtils.findAll(PushNews.class);
         } catch (DbException e) {
             e.printStackTrace();
