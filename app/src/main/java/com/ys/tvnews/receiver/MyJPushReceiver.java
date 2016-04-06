@@ -63,7 +63,6 @@ public class MyJPushReceiver extends BroadcastReceiver{
             System.out.println("用户点击打开了通知");
             dbUtils = MyApplication.getDbInstance();
             Log.e("info", bundle.getString(JPushInterface.EXTRA_ALERT));
-
             pushNews.setMessage(bundle.getString(JPushInterface.EXTRA_ALERT));
             try {
                 if(pushNews!=null)

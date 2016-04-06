@@ -51,7 +51,7 @@ public class MyApplication extends Application{
             mDbUtils = DbUtils.create(mContext);
             return mDbUtils;
         }
-        return null;
+        return mDbUtils;
     }
 
     /**

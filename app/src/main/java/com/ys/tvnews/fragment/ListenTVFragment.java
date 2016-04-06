@@ -61,9 +61,6 @@ public class ListenTVFragment extends Fragment{
 
 
         NotificationCompat.Builder mBuidler = new NotificationCompat.Builder(getActivity());
-
-
-
         RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(),R.layout.notification);
         remoteViews.setTextViewText(R.id.notify_title,"新闻推送");
         remoteViews.setTextViewText(R.id.notify_content, "Hello，Notification，I'm coming!!!");
@@ -80,14 +77,20 @@ public class ListenTVFragment extends Fragment{
         intent.putExtra("pushNews", pushNews);
         PendingIntent notify_intent = PendingIntent.getActivities(mContext, 0, new Intent[]{intent}, 0);
 
-        mBuidler.setSmallIcon(R.mipmap.push_image).setTicker("您有新的消息推送哦").setContent(remoteViews).setContentIntent(notify_intent);
+        mBuidler.setSmallIcon(R.mipmap.push_image).setTicker("您有新的消息推送哦").setContent(remoteViews).setShowWhen(true).setContentIntent(notify_intent);
         Notification notification = mBuidler.build();
         manager.notify(2, notification);
    //     remoteViews.removeAllViews();
 
     }
 
-    public void removeNotification(){
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         manager.cancel(2);
     }
+
+//    public void removeNotification(){
+//        manager.cancel(2);
+//    }
 }

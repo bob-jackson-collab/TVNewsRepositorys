@@ -1,6 +1,7 @@
 package com.ys.tvnews.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,7 +59,6 @@ public class PushNewsActivity extends Activity {
         pushNews = (PushNews) getIntent().getSerializableExtra("pushNews");
         if(pushNews!=null) {
             Log.e("info", pushNews.getMessage());
-
             //list_items.add(pushNews.getMessage());
             mAdapter.notifyDataSetChanged();
         }
@@ -87,8 +87,25 @@ public class PushNewsActivity extends Activity {
 
     private void initView(){
         empty_view = LayoutInflater.from(PushNewsActivity.this).inflate(R.layout.empty_view,null);
-        titleBuilder = new TitleBuilder(PushNewsActivity.this).setLeftImageRes(R.mipmap.base_header_back).setMiddleTitleText("推送消息").setRightText("删除");
-
+        titleBuilder = new TitleBuilder(PushNewsActivity.this).setLeftImageRes(R.mipmap.base_header_back).setMiddleTitleText("推送消息").setRightText("清空");
+        titleBuilder.setLeftTextOrImageListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               PushNewsActivity.this.startActivity(new Intent(PushNewsActivity.this,IndexActivity.class));
+            }
+        });
+        titleBuilder.setRightTextOrImageListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mDbUtils.deleteAll(PushNews.class);
+                    list_push_news.clear();
+                    mAdapter.setList_push_news(list_push_news);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         flabbyListView = (FlabbyListView) findViewById(R.id.flabby_listView);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 

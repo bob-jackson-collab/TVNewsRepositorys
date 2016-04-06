@@ -30,6 +30,11 @@ public class PushNewsAdapter extends BaseAdapter{
         this.list_push_news = list_push_news;
     }
 
+    public void setList_push_news(List<PushNews> list_push_news){
+        this.list_push_news = list_push_news;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return list_push_news.size();
