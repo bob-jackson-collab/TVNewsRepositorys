@@ -149,24 +149,24 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
     protected void reqServer() {
 
         Log.e("info","执行了server");
-        Log.e("-------------------",btn_quick_login.getText().toString());
-//        if(getIntent()!=null){
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Log.e("head_image_url", getIntent().getStringExtra("head_img_url"));
-//                    bitmap = Util.getbitmap(getIntent().getStringExtra("head_img_url"));
-//                    Message msg = Message.obtain();
-//                    msg.obj = bitmap;
-//                    msg.what = 0;
-//                    image_handler.sendMessage(msg);
-//
-//                }
-//            }).start();
-//        }else{
-//            user_head_img.setImageResource(R.mipmap.touxiang);
-//            titleViews.setRightText("登录");
-//        }
+        if(getIntent()!=null){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                   // Log.e("head_image_url", getIntent().getStringExtra("head_img_url"));
+                    if(getIntent().getStringExtra("head_img_url")!=null) {
+                        bitmap = Util.getbitmap(getIntent().getStringExtra("head_img_url"));
+                        Message msg = Message.obtain();
+                        msg.obj = bitmap;
+                        msg.what = 0;
+                        image_handler.sendMessage(msg);
+                    }
+                }
+            }).start();
+        }else{
+            user_head_img.setImageResource(R.mipmap.touxiang);
+            titleViews.setRightText("登录");
+        }
 
     }
 
@@ -179,14 +179,14 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.btn_quick_login:
-                if(btn_quick_login.getText()!=null){
-                    Log.e("info",btn_quick_login.getText().toString());
-                    showToast("您已经登录了哦!");
-                }else {
+//                if(btn_quick_login.getText()!=null){
+//                    Log.e("info",btn_quick_login.getText().toString());
+//                    showToast("您已经登录了哦!");
+//                }else {
                     Intent intent = new Intent(PersonalActivity.this, LoginActivity.class);
                     startActivity(intent);
                     this.finish();
-                }
+//                }
                 break;
             case R.id.scan_tv:
                 Intent scan_intent = new Intent();

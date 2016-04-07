@@ -133,7 +133,6 @@ public class MyApplication extends Application{
         return myApplication;
     }
 
-
     public static Tencent getmTencent(){
         if(mTencent==null){
             mTencent = Tencent.createInstance("222222",mContext);

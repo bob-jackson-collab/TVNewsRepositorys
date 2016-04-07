@@ -94,6 +94,7 @@ public class LocationActivity extends Activity implements View.OnClickListener{
         mLocationMode = MyLocationConfiguration.LocationMode.NORMAL;
         locationClient = new LocationClient(this);
         locationListener = new MyLocationListener();
+        //注册监听
         locationClient.registerLocationListener(locationListener);
 
         LocationClientOption option = new LocationClientOption();
@@ -102,7 +103,7 @@ public class LocationActivity extends Activity implements View.OnClickListener{
         option.setOpenGps(true);
         option.setScanSpan(1000);
         locationClient.setLocOption(option);
-        // 初始化图标
+        // 初始化定位图标
         mCurrentMarker = BitmapDescriptorFactory
                 .fromResource(R.mipmap.navi_map_gps_locked);
 
@@ -124,8 +125,9 @@ public class LocationActivity extends Activity implements View.OnClickListener{
         baiduMap.setMyLocationEnabled(true);
         if(!locationClient.isStarted()){
             //定位开启
+            Log.e("info","开始定位");
             locationClient.start();
-            locationClient.requestLocation();
+          //  locationClient.requestLocation();
         }
     }
 
@@ -178,17 +180,17 @@ public class LocationActivity extends Activity implements View.OnClickListener{
         public void onReceiveLocation(BDLocation bdLocation) {
             Log.e("===============",bdLocation.getAddrStr());
             //推送自己所在位置的信息
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(LocationActivity.this);
-            RemoteViews remoteView = new RemoteViews(getPackageName(),R.layout.notification);
-            remoteView.setTextViewText(R.id.notify_content,bdLocation.getAddrStr());
-            Intent intent = new Intent(LocationActivity.this, PushNews.class);
-            PushNews pushNews = new PushNews();
-            pushNews.setMessage(bdLocation.getAddrStr());
-            intent.putExtra("pushNews",pushNews);
-            PendingIntent pendingIntent = PendingIntent.getActivity(LocationActivity.this,0,intent,0);
-            Notification notification = builder.build();
-            manager.notify(100,notification);
+//            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//            NotificationCompat.Builder builder = new NotificationCompat.Builder(LocationActivity.this);
+//            RemoteViews remoteView = new RemoteViews(getPackageName(),R.layout.notification);
+//            remoteView.setTextViewText(R.id.notify_content,bdLocation.getAddrStr());
+//            Intent intent = new Intent(LocationActivity.this, PushNews.class);
+//            PushNews pushNews = new PushNews();
+//            pushNews.setMessage(bdLocation.getAddrStr());
+//            intent.putExtra("pushNews",pushNews);
+//            PendingIntent pendingIntent = PendingIntent.getActivity(LocationActivity.this,0,intent,0);
+//            Notification notification = builder.build();
+//            manager.notify(100,notification);
 
 
             MyLocationData data = new MyLocationData.Builder()//
@@ -222,11 +224,12 @@ public class LocationActivity extends Activity implements View.OnClickListener{
     public void onClick(View view){
         switch (view.getId()){
             case R.id.start_location:
+                locationClient.start();
                 currentToMyLocation();
                 break;
             case R.id.image_search:
                 String news_name = et_seach_news.getText().toString();
-                if(news_name!=null) {
+                if(news_name!=null || "".equals(news_name)) {
                     mPoiSearch.searchInCity((new PoiCitySearchOption())
                             .city("北京")
                             .keyword(news_name)

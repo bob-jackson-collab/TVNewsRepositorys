@@ -41,6 +41,7 @@ import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.ys.tvnews.R;
+import com.ys.tvnews.activity.MyOrientationListener;
 import com.ys.tvnews.bean.PushNews;
 
 import java.util.List;
@@ -63,6 +64,8 @@ public class TVFragment extends Fragment implements View.OnClickListener{
     private float latitude,longitude;
     private PoiSearch mPoiSearch;
     private MyPoiSearchListener searchListener;
+    private MyOrientationListener myOrientationListener;
+    private float mCurrentX;
 
     @Nullable
     @Override
@@ -109,6 +112,17 @@ public class TVFragment extends Fragment implements View.OnClickListener{
         // 初始化图标
         mCurrentMarker = BitmapDescriptorFactory
                 .fromResource(R.mipmap.navi_map_gps_locked);
+        myOrientationListener = new MyOrientationListener(getActivity());
+
+        myOrientationListener
+                .setOnOrientationListener(new MyOrientationListener.OnOrientationListener()
+                {
+                    @Override
+                    public void onOrientationChanged(float x)
+                    {
+                        mCurrentX = x;
+                    }
+                });
 
     }
 
@@ -130,6 +144,7 @@ public class TVFragment extends Fragment implements View.OnClickListener{
             //定位开启
             locationClient.start();
             locationClient.requestLocation();
+            myOrientationListener.start();
         }
     }
 
@@ -144,6 +159,7 @@ public class TVFragment extends Fragment implements View.OnClickListener{
         super.onStop();
         baiduMap.setMyLocationEnabled(false);
         locationClient.stop();
+        myOrientationListener.stop();
     }
 
     @Override
@@ -191,12 +207,13 @@ public class TVFragment extends Fragment implements View.OnClickListener{
             pushNews.setMessage(bdLocation.getAddrStr());
             intent.putExtra("pushNews",pushNews);
             PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(),0,intent,0);
+            builder.setContent(remoteView).setShowWhen(true).setTicker("消息推送").setContentIntent(pendingIntent);
             Notification notification = builder.build();
             manager.notify(100,notification);
 
 
             MyLocationData data = new MyLocationData.Builder()//
-                    .direction(100)// // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(mCurrentX)// // 此处设置开发者获取到的方向信息，顺时针0-360
                     .accuracy(bdLocation.getRadius())//
                     .latitude(bdLocation.getLatitude())//
                     .longitude(bdLocation.getLongitude())//
