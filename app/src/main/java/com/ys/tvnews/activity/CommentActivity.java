@@ -36,6 +36,8 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private List<CommentBean> list_comment;
     private DbUtils mDbUtils;
     private CommentAdapter mAdapter;
+    private Date mDate;
+    private SimpleDateFormat mSdf;
 
     @Override
     protected int loadLayout() {
@@ -46,7 +48,13 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     protected void findView() {
         mContext = CommentActivity.this;
         mTitleView = new TitleViews(mContext);
-        mTitleView.setTitle("评论");
+        mTitleView.setTitle("相关评论");
+        mTitleView.setBackClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommentActivity.this.finish();
+            }
+        });
         comment_list_view = (ListView) findViewById(R.id.comment_list_view);
         et_comment = (EditText) findViewById(R.id.et_comment);
         send_comment = (Button) findViewById(R.id.send_comment);
@@ -83,21 +91,12 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         mDbUtils = MyApplication.getDbInstance();
         list_comment = new ArrayList<>();
         mAdapter = new CommentAdapter(CommentActivity.this);
-        CommentBean commentBean = new CommentBean();
-        commentBean.setComment("你好啊！！！！");
-        Date date = new Date();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式Simple
-        String time = df.format(date);
-        commentBean.setComment_time(time);
-        commentBean.setLike("10");
-        commentBean.setUnLike("2");
-        commentBean.setUserName("张弘扬");
+       //从数据库中得到评论列表
         try {
-            mDbUtils.save(commentBean);
+            list_comment = mDbUtils.findAll(CommentBean.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
-        list_comment.add(commentBean);
         comment_list_view.setAdapter(mAdapter);
         mAdapter.addAllList(list_comment);
         //    list_comment.add
@@ -112,8 +111,30 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.send_comment:
+                CommentBean commentBean = new CommentBean();
+                commentBean.setUserName("yangsong");
+                commentBean.setLike("0");
+                commentBean.setUnLike("0");
+                commentBean.setComment_time(mSdf.format(mDate));
+                commentBean.setComment(et_comment.getText().toString());
+                et_comment.setText(null);
+                try {
+                    mDbUtils.save(commentBean);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+                list_comment.add(commentBean);
+                mAdapter.addAllList(list_comment);
                 break;
             default : break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mDbUtils!=null){
+            mDbUtils.close();
         }
     }
 }

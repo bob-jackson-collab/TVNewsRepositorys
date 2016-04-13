@@ -46,14 +46,14 @@ public class CommentAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final ViewHolder holder;
         if(convertView==null){
            convertView = LayoutInflater.from(mContext).inflate(R.layout.comment_item_layout,parent,false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }else{
-            convertView = (View) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
         holder.userName.setText(list_comment.get(position).getUserName());
         holder.comment_time.setText(list_comment.get(position).getComment_time());
@@ -61,12 +61,28 @@ public class CommentAdapter extends BaseAdapter{
         //holder.head_image.setIm
         holder.like.setText(list_comment.get(position).getLike());
         holder.unLike.setText(list_comment.get(position).getUnLike());
+        holder.iv_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int time = Integer.parseInt(list_comment.get(position).getLike());
+                time++;
+                holder.like.setText(time+ "");
+            }
+        });
+        holder.iv_unlike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int time = Integer.parseInt(list_comment.get(position).getUnLike());
+                time++;
+                holder.unLike.setText(time+"");
+            }
+        });
 
         return convertView;
     }
 
     class ViewHolder{
-        private ImageView head_image;
+        private ImageView head_image,iv_like,iv_unlike;
         private TextView userName,comment_time,like,unLike,comment;
 
         public ViewHolder(View view){
@@ -76,6 +92,8 @@ public class CommentAdapter extends BaseAdapter{
             like = (TextView) view.findViewById(R.id.tv_like);
             unLike = (TextView) view.findViewById(R.id.tv_unlike);
             comment = (TextView) view.findViewById(R.id.text_comment);
+            iv_like = (ImageView) view.findViewById(R.id.iv_like);
+            iv_unlike = (ImageView) view.findViewById(R.id.iv_unlike);
         }
     }
 }

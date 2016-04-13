@@ -5,22 +5,15 @@
     <include
         android:id="@+id/comment_title"
         layout="@layout/title_view" />
-    <ListView
-        android:id="@+id/comment_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="#ffffff"
-        android:layout_below="@id/comment_title"
-        android:dividerHeight="1dip">
 
-    </ListView>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dip"
+        android:layout_height="60dip"
         android:orientation="horizontal"
         android:padding="5dp"
         android:gravity="center"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:id="@+id/linearLayout">
         <EditText
             android:id="@+id/et_comment"
             android:layout_width="0dp"
@@ -33,9 +26,20 @@
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_weight="1"
-            android:background="#ff0011"
+            android:background="#cccccc"
             android:text="发送"/>
     </LinearLayout>
+    <ListView
+        android:id="@+id/comment_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#ffffff"
+        android:layout_below="@id/comment_title"
+        android:dividerHeight="1dip"
+        android:layout_above="@+id/linearLayout">
+
+    </ListView>
+
 
 
 </RelativeLayout>
