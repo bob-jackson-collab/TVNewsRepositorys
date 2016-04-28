@@ -30,6 +30,7 @@ import com.ys.tvnews.application.MyApplication;
 import com.ys.tvnews.bean.AdvBean;
 import com.ys.tvnews.bean.CollectBean;
 import com.ys.tvnews.bean.NewsBean;
+import com.ys.tvnews.bean.TimeNewsBean;
 import com.ys.tvnews.bean.TopicNews;
 import com.ys.tvnews.sqlite.DBHelper;
 import com.ys.tvnews.sqlite.OperateDB;
@@ -45,6 +46,7 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
     private TopicNews topic_news;
     private NewsBean news;
     private CollectBean collectBean;
+    private TimeNewsBean timeNewsBean;
     //private String url =  "http://m.news.cntv.cn/c/art/index.shtml?id=ARTI1450793452777103&isfromapp=1";
     private Intent intent;
     private OperateDB operateDB;
@@ -64,7 +66,7 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         advNews = (AdvBean) intent.getSerializableExtra("advNews");
         topic_news = (TopicNews) intent.getSerializableExtra("topic_news");
         collectBean = (CollectBean) intent.getSerializableExtra("collectBean");
-
+        timeNewsBean = (TimeNewsBean) intent.getSerializableExtra("timeNewsBean");
         if(news == null){
             detailUrl = advNews.getDetailUrl();
         }else if(advNews == null){
@@ -73,6 +75,8 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
             detailUrl = topic_news.getWeburl();
         }else if(collectBean!=null){
             detailUrl = collectBean.getDetailUrl();
+        }else if(timeNewsBean!=null){
+            detailUrl = timeNewsBean.getLink();
         }
         initView();
         setWebSettings();

@@ -19,6 +19,7 @@ import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.ys.tvnews.R;
 import com.ys.tvnews.activity.PersonalActivity;
@@ -48,7 +49,17 @@ public class UpdateVersionReceiver extends BroadcastReceiver{
     NotificationCompat.Builder mBuidler;
     private File download_fie;
     private FileOutputStream fos;
-    private Handler updateHandler;
+    private Handler updateHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == 1){
+                Log.e("ooooo",msg.arg1+"");
+                remoteViews.setProgressBar(R.id.download_progressBar,100,msg.arg1,false);
+                manager.notify(100,notification);
+            }
+        }
+    };;
 
 
     @Override
@@ -88,18 +99,6 @@ public class UpdateVersionReceiver extends BroadcastReceiver{
     }
 
        private void startDownloadAPK(final Context context) {
-
-              updateHandler = new Handler(){
-               @Override
-               public void handleMessage(Message msg) {
-                   super.handleMessage(msg);
-                   if(msg.what == 1){
-                       Log.e("ooooo",msg.arg1+"");
-                       remoteViews.setProgressBar(R.id.download_progressBar,100,msg.arg1,false);
-                       manager.notify(100,notification);
-                   }
-               }
-           };
            manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
            mBuidler = new NotificationCompat.Builder(context);
            remoteViews = new RemoteViews(context.getPackageName(), R.layout.download_apk);
@@ -121,15 +120,17 @@ public class UpdateVersionReceiver extends BroadcastReceiver{
                            download_fie.createNewFile();
                        }
                        URL url = new URL("http://10.88.88.17:8081/gpay/360.apk");
+                       //URL url = new URL("http://www.baidu.com");
                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                        connection.setDoInput(true);
                        connection.setDoOutput(true);
+                       connection.setRequestProperty("Accept-Encoding", "identity");
                        connection.setRequestMethod("GET");
-                       connection.setConnectTimeout(10000);
-
+                       connection.setConnectTimeout(50000);
                        Log.e("==============",connection.getResponseCode()+"");
                        if (connection.getResponseCode() == 200) {
                            int download_max = connection.getContentLength();
+                           Log.e("downloadMax",download_max+"");
                            InputStream inputStream = connection.getInputStream();
                            //  updateFile  = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"xinwen.apk");
                            fos = new FileOutputStream(download_fie);
@@ -148,6 +149,7 @@ public class UpdateVersionReceiver extends BroadcastReceiver{
                                fos.write(buffer,0,length);
                                fos.flush();
                                count = count + length;
+                               Log.e("count",count+"");
                                int download_progress = (int) (((double)count /(double) download_max) *  100);
                                Log.e("download_progressss", download_progress + "");
                                Message msg = Message.obtain();
@@ -157,6 +159,7 @@ public class UpdateVersionReceiver extends BroadcastReceiver{
                            } while (true);
                        }
                    } catch (Exception e) {
+                       Toast.makeText(context,"服务器出现了异常哦！",Toast.LENGTH_SHORT).show();
                        e.printStackTrace();
                    }finally{
                        if(fos!=null) {

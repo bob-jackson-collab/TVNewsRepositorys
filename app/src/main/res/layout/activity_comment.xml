@@ -2,29 +2,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include
+
+    <RelativeLayout
         android:id="@+id/comment_title"
-        layout="@layout/title_view" />
+        android:layout_width="match_parent"
+        android:layout_height="45dip">
+        <ImageView
+            android:id="@+id/img_comment_back"
+            android:layout_width="45dip"
+            android:layout_height="35dip"
+            android:layout_margin="3dip"
+            android:src="@mipmap/base_header_back"
+            android:layout_marginLeft="5dp"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="相关评论"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:textSize="25sp"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dip"
+        android:layout_height="65dip"
         android:orientation="horizontal"
-        android:padding="5dp"
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:id="@+id/linearLayout">
         <EditText
             android:id="@+id/et_comment"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:layout_weight="4"
             android:gravity="center"
             android:hint="写下你的评论吧"/>
         <Button
             android:id="@+id/send_comment"
             android:layout_width="0dp"
-            android:layout_height="55dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#cccccc"
             android:text="发送"/>

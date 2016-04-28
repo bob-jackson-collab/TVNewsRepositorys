@@ -46,9 +46,12 @@
                 android:id="@+id/btn_quick_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@mipmap/setting_login"
+                android:background="@drawable/btn_experience_shape"
                 android:layout_marginTop="6dp"
                 android:layout_centerHorizontal="true"
+                android:text="立即登录"
+                android:textColor="#1699d9"
+                android:textSize="16sp"
                 android:layout_below="@id/user_head_img"/>
 
             <LinearLayout

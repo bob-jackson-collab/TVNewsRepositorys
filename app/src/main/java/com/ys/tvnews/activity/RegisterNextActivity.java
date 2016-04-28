@@ -22,6 +22,7 @@ import com.ys.tvnews.R;
 import com.ys.tvnews.application.MyApplication;
 import com.ys.tvnews.httpurls.HttpUrl;
 import com.ys.tvnews.utils.DESMD5Utils;
+import com.ys.tvnews.utils.ShareUtils;
 import com.ys.tvnews.views.MyProgressDialog;
 import com.ys.tvnews.views.TitleViews;
 
@@ -87,8 +88,6 @@ public class RegisterNextActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.btn_register:
                 register();
-
-
                 break;
             default:  break;
         }
@@ -114,7 +113,7 @@ public class RegisterNextActivity extends BaseActivity implements View.OnClickLi
         }
 
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("dauserName",
+        map.put("data.userName",
                 DESMD5Utils.doDESEncode(phone, HttpUrl.desKey));
         map.put("data.loginPwd", DESMD5Utils.doDESEncode(passwd, HttpUrl.desKey));
         map.put("data.regChannel", "myweb");
@@ -145,6 +144,7 @@ public class RegisterNextActivity extends BaseActivity implements View.OnClickLi
                             showToast("恭喜您！注册成功!");
                             Intent success_intent = new Intent(RegisterNextActivity.this, PersonalActivity.class);
                             success_intent.putExtra("phone", phone);
+                            ShareUtils.setUserName(mContext,phone);
                             startActivity(success_intent);
                             RegisterNextActivity.this.finish();
                         }

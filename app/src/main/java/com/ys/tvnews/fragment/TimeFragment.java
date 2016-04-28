@@ -1,11 +1,15 @@
 package com.ys.tvnews.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -14,11 +18,18 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.ys.tvnews.R;
+import com.ys.tvnews.activity.NewsDetailActivity;
 import com.ys.tvnews.adapter.TimeAdapter;
+import com.ys.tvnews.adapter.TimeNewsAdapter;
 import com.ys.tvnews.bean.OilPriceBean;
+import com.ys.tvnews.bean.TimeNewsBean;
+import com.ys.tvnews.httpurls.HttpUrl;
 import com.ys.tvnews.views.MyProgressDialog;
 import com.ys.tvnews.views.PinnedHeaderListView;
 import com.ys.tvnews.views.TitleBuilder;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -28,21 +39,15 @@ import java.util.List;
 /**
  * Created by sks on 2015/12/8.
  */
-public class TimeFragment extends  BaseFragment{
+public class TimeFragment extends  BaseFragment implements AdapterView.OnItemClickListener{
 
     private TitleBuilder titleBuilder;
     private HttpUtils httpUtils;
-    private String oil_url = "http://apis.juhe.cn/cnoil/oil_city";
-    private String appkey= "9fab7e3d50bc6a25383c31a9e853326f";
-    private OilPriceBean oilPriceBean;
-    private ExpandableListView expandableListView;
-    private TimeAdapter mAdapter;
+    private TimeNewsAdapter mAdapter;
     private MyProgressDialog mDialog;
-    //private List<CityBean>();
-    //首数据集
-    private List<String> parent;
-    private HashMap<String,List<String>> mMap;
-    private List<OilPriceBean.CityBean> list_city;
+    private List<TimeNewsBean> list_time_news;
+    private TimeNewsBean timeNewsBean;
+    private ListView listView;
 
     @Override
     protected int loadLayout() {
@@ -51,7 +56,7 @@ public class TimeFragment extends  BaseFragment{
 
     @Override
     protected void findView(View view) {
-        expandableListView = (ExpandableListView) view.findViewById(R.id.expandelistView);
+      listView = (ListView) view.findViewById(R.id.time_listView);
     }
 
     @Override
@@ -62,12 +67,11 @@ public class TimeFragment extends  BaseFragment{
     @Override
     protected void loadData() {
         mDialog = MyProgressDialog.createLoadingDialog(getActivity(),"正在加载哦");
-        titleBuilder = new TitleBuilder(mContext).setLeftImageRes(R.mipmap.base_header_back).setMiddleTitleText("石油价钱");
+        list_time_news = new ArrayList<>();
+        titleBuilder = new TitleBuilder(mContext).setLeftImageRes(R.mipmap.base_header_back).setMiddleTitleText("时间新闻");
         httpUtils = new HttpUtils(5000);
-        oilPriceBean = new OilPriceBean();
         RequestParams params = new RequestParams();
-        params.addBodyParameter("key",appkey);
-        httpUtils.send(HttpRequest.HttpMethod.POST, oil_url, params, new RequestCallBack<String>() {
+        httpUtils.send(HttpRequest.HttpMethod.GET, HttpUrl.TIMENEWSURL, params, new RequestCallBack<String>() {
 
             @Override
             public void onStart() {
@@ -80,20 +84,10 @@ public class TimeFragment extends  BaseFragment{
                 Log.e("info",responseInfo.result);
                 if(responseInfo.result!=null) {
                     mDialog.dismiss();
-                    Type type = new TypeToken<OilPriceBean>() {
-                    }.getType();
-                    oilPriceBean = new Gson().fromJson(responseInfo.result, type);
-                    if (oilPriceBean.getError_code().equals("0")) {
-                        Log.e("info", oilPriceBean.getList_cityBean().size() + "");
-                        list_city = oilPriceBean.getList_cityBean();
-                        if(list_city!=null) {
-                            packageData();
-                            mAdapter = new TimeAdapter(getActivity(),parent,mMap);
-                            expandableListView.setAdapter(mAdapter);
-                        }
-                    }else{
-                        showToast(oilPriceBean.getReason());
-                    }
+                    packageData(responseInfo.result);
+                    mAdapter = new TimeNewsAdapter(getActivity());
+                    listView.setAdapter(mAdapter);
+                    mAdapter.setList_time_news(list_time_news);
                 }else{
                     showToast("网络连接失败！");
                 }
@@ -106,29 +100,44 @@ public class TimeFragment extends  BaseFragment{
             }
         });
         View view = View.inflate(getActivity(),R.layout.empty_view,null);
-        expandableListView.setEmptyView(view);
+        listView.setEmptyView(view);
 
     }
 
-    private void packageData(){
-        parent = new ArrayList<>();
-        for(int i=0;i<list_city.size();i++){
-           parent.add(list_city.get(i).getCity());
-        }
-        mMap = new HashMap<>();
-        for(int i = 0;i<parent.size();i++){
-            List<String> child  = new ArrayList<>();
-            if(parent.get(i).equals(list_city.get(i).getCity())) {
-                child.add(list_city.get(i).getB0());
-                child.add(list_city.get(i).getB90());
-                child.add(list_city.get(i).getB93());
-                child.add(list_city.get(i).getB97());
+    private void packageData(String content){
+        try {
+            JSONObject jsonObject = new JSONObject(content);
+            if("0".equals(jsonObject.getString("code"))){
+                JSONObject data  = jsonObject.getJSONObject("data");
+                JSONArray datas = data.getJSONArray("data");
+                for(int i = 0;i<datas.length();i++){
+                    TimeNewsBean timeNewsBean =  new TimeNewsBean();
+                    JSONObject object = datas.getJSONObject(i);
+                    timeNewsBean.setCreateTime(object.getString("createTime"));
+                    timeNewsBean.setLink(object.getString("link"));
+                    timeNewsBean.setDescription(object.getString("descrpition"));
+                    timeNewsBean.setListImageUrl(object.getString("listImageUrl"));
+                    list_time_news.add(timeNewsBean);
+                    timeNewsBean = null;
+                }
+            }else{
+
             }
-            mMap.put(parent.get(i),child);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
     @Override
     public void requestServer() {
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+        timeNewsBean = list_time_news.get(position);
+        intent.putExtra("timeNewsBean",timeNewsBean);
+        getActivity().startActivity(intent);
     }
 }

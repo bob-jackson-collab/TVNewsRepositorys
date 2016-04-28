@@ -58,7 +58,8 @@
                 android:gravity="center"
                 android:button="@null"
                 android:drawableTop="@drawable/tv_selected"
-                android:text="电视"/>
+                android:text="百度地位"
+                android:checked="false" />
             <RadioButton
                 android:id="@+id/radio_listen_tv"
                 android:layout_width="0dp"
@@ -67,7 +68,8 @@
                 android:gravity="center"
                 android:button="@null"
                 android:drawableTop="@drawable/listen_tv_selected"
-                android:text="听电视"/>
+                android:text="极光推送"
+                android:checked="false" />
 
         </RadioGroup>
 

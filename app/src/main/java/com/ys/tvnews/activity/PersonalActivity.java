@@ -12,16 +12,24 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -32,11 +40,14 @@ import com.ys.tvnews.application.MyApplication;
 import com.ys.tvnews.httpurls.HttpUrl;
 import com.ys.tvnews.receiver.UpdateVersionReceiver;
 import com.ys.tvnews.utils.AppUtils;
+import com.ys.tvnews.utils.ScreenUtil;
+import com.ys.tvnews.utils.ShareUtils;
 import com.ys.tvnews.utils.Util;
 import com.ys.tvnews.views.PersonalScrollView;
 import com.ys.tvnews.views.TitleViews;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -62,6 +73,9 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
     private String userPhone;     //用户名
     UpdateVersionReceiver updateVersionReceiver; //更新app的广播
     private Bitmap bitmap ; //  登录头像
+    private PopupWindow mPopup;
+    private View mPopupView;
+    private Bitmap head;
 
 
     private final static int SCANNIN_GREQUEST_CODE = 1;
@@ -109,23 +123,26 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
         collect_tv.setOnClickListener(this);
         personal_scrollview.setOnScrollListener(this);
         push_news_toggle.setOnCheckedChangeListener(this);
+        user_head_img.setOnClickListener(this);
     }
 
     @Override
     protected void loadData() {
-
+        mPopupView = LayoutInflater.from(mContext).inflate(R.layout.popup_image,null);
         titleViews.setTitleTextColor(Color.RED);
-
-        userPhone = getIntent().getStringExtra("phone");
-        if(userPhone!=null){
+        btn_quick_login.setBackgroundColor(Color.parseColor("#14d212"));
+        btn_quick_login.setBackgroundResource(R.drawable.btn_experience_shape);
+        btn_quick_login.setTextColor(Color.parseColor("#1699d9"));
+        if(!"".equals(ShareUtils.getUserName(mContext))){
+            userPhone = ShareUtils.getUserName(mContext);
             btn_quick_login.setText("用户:"+userPhone);
-            btn_quick_login.setBackgroundColor(Color.parseColor("#14d212"));
-            btn_quick_login.setBackgroundResource(R.drawable.btn_experience_shape);
-            btn_quick_login.setTextColor(Color.parseColor("#1699d9"));
+            titleViews.setRightText("退出登录");
+            titleViews.setRightTextColor(Color.RED);
+            Log.e("=====>>>>",ShareUtils.getUserName(mContext));
+        }else{
+            btn_quick_login.setText("立即登录");
+            titleViews.setRightText(null);
         }
-
-       // titleViews.setBackgroundColor(Color.RED);
-        titleViews.getBackground().setAlpha(0);
         bitmapUtils = new BitmapUtils(PersonalActivity.this);
         title_textView.setText("个人中心");
         Intent intent = getIntent();
@@ -133,22 +150,26 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
             btn_quick_login.setText(intent.getStringExtra("nickname"));
             btn_quick_login.setTextColor(Color.RED);
             btn_quick_login.setBackgroundResource(R.drawable.btn_experience_shape);
+            titleViews.setRightText("注销");
+            titleViews.setRightTextColor(Color.RED);
         }else{
-             btn_quick_login.setBackgroundResource(R.mipmap.setting_login);
+           // titleViews.setRightText(null);
         }
-//        String head_img_url = intent.getStringExtra("head_img_url");
-//        if(head_img_url!=null){
-//            btn_quick_login.setBackgroundResource(R.mipmap.tuichu_denglu);
-//            bitmapUtils.display(user_head_img,head_img_url);
-//        }
 
-
+        titleViews.setRightClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if("退出登录".equals(titleViews.getRightTextView().getText())){
+                    ShareUtils.clearUserName(mContext);
+                    mContext.startActivity(new Intent(PersonalActivity.this,LoginActivity.class));
+                    PersonalActivity.this.finish();
+                }
+            }
+        });
     }
 
     @Override
     protected void reqServer() {
-
-        Log.e("info","执行了server");
         if(getIntent()!=null){
             new Thread(new Runnable() {
                 @Override
@@ -179,14 +200,11 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
             case R.id.btn_quick_login:
-//                if(btn_quick_login.getText()!=null){
-//                    Log.e("info",btn_quick_login.getText().toString());
-//                    showToast("您已经登录了哦!");
-//                }else {
+                if(btn_quick_login.getText().equals("立即登录")) {
                     Intent intent = new Intent(PersonalActivity.this, LoginActivity.class);
                     startActivity(intent);
                     this.finish();
-//                }
+                }
                 break;
             case R.id.scan_tv:
                 Intent scan_intent = new Intent();
@@ -201,6 +219,25 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_check_version:
                 sendBroadcast(new Intent(UpdateVersionReceiver.UPDATEACTION));
                 break;
+            case R.id.user_head_img:
+                showPopupWindow(v);
+                break;
+            case R.id.tv_camera:   //调用系统相机
+                Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+                        "head.jpg")));
+                startActivityForResult(intent2, 2);//采用ForResult打开
+                break;
+            case R.id.tv_xiangce:
+                Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+                intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intent1, 3);
+                break;
+            case R.id.tv_cancel:
+                if(mPopup.isShowing()){
+                    mPopup.dismiss();
+                }
+                break;
             default: break;
         }
     }
@@ -208,27 +245,50 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode== SCANNIN_GREQUEST_CODE){ //扫描之后的回调处理
-            if(resultCode==RESULT_OK) {
-                Bundle bundle = data.getExtras();
-                if (bundle != null) {
-                    Log.e("result", bundle.getString("result"));
+        switch (requestCode){
+            case SCANNIN_GREQUEST_CODE:  //扫描之后的回调处理
+                if(resultCode==RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+                    if (bundle != null) {
+                        Log.e("result", bundle.getString("result"));
+                    }
                 }
-            }
+                break;
+            case 2:
+                File temp = new File(Environment.getExternalStorageDirectory()
+                        + "/head.jpg");
+                cropPhoto(Uri.fromFile(temp));//裁剪图片
+                break;
+            case 3:
+                if (resultCode == RESULT_OK) {
+                    cropPhoto(data.getData());//裁剪图片
+                }
+            case 4:
+                if (data != null) {
+                    Bundle extras = data.getExtras();
+                    head = extras.getParcelable("data");
+                    if(head!=null){
+                        if(mPopup.isShowing())
+                            mPopup.dismiss();
+                        user_head_img.setImageBitmap(toRoundBitmap(head));//用ImageView显示出来
+                    }
+
+                }
+                break;
+            default:break;
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onScroll(int scrollY) {
         int height = title_back_imageView.getHeight();
-        Log.e("info", "height" + height+"titleViews"+titleViews.getHeight());
-        Log.e("info",scrollY+"");
         double alpha = ((double) scrollY /(double) (height)) *255;
         if(scrollY <height) {
             titleViews.getBackground().setAlpha((int) alpha);
         }else{
-          //  titleViews.setBackground(Color.WHITE);
+          titleViews.getBackground().setAlpha(255);
         }
     }
 
@@ -298,4 +358,36 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
         return backgroundBm;
     }
 
+    private void showPopupWindow(View view){
+        mPopupView.findViewById(R.id.tv_camera).setOnClickListener(this);
+        mPopupView.findViewById(R.id.tv_xiangce).setOnClickListener(this);
+        mPopupView.findViewById(R.id.tv_cancel).setOnClickListener(this);
+        int [] length = ScreenUtil.getScreenSize(mContext);  //得到屏幕的宽 高
+        int width = length[0];
+        int height = length[1] / 6;
+        mPopup = new PopupWindow(mPopupView,width,height);
+        mPopup.setFocusable(true);
+        mPopup.setOutsideTouchable(true);
+        mPopup.setBackgroundDrawable(new BitmapDrawable());
+        mPopup.showAtLocation(view, Gravity.BOTTOM,0,0);
+     //   mPopup.showAsDropDown(view);
+    }
+
+    /**
+     * 调用系统的裁剪
+     * @param uri
+     */
+    public void cropPhoto(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 150);
+        intent.putExtra("outputY", 150);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, 4);
+    }
 }

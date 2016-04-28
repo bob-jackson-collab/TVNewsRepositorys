@@ -33,6 +33,7 @@ import com.ys.tvnews.httpurls.HttpUrl;
 import com.ys.tvnews.receiver.LoginBroadCastReceiver;
 import com.ys.tvnews.utils.AppUtils;
 import com.ys.tvnews.utils.DESMD5Utils;
+import com.ys.tvnews.utils.ShareUtils;
 import com.ys.tvnews.views.MyProgressDialog;
 
 import org.json.JSONException;
@@ -245,6 +246,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         if ("0".equals(new JSONObject(responseInfo.result).getJSONObject("msg").get("code"))) {
                             Intent login_intent = new Intent(LoginActivity.this,PersonalActivity.class);
                             login_intent.putExtra("phone", username.getText().toString().trim());
+                            ShareUtils.setUserName(mContext,username.getText().toString().trim());
                             startActivity(login_intent);
                             LoginActivity.this.finish();
                         } else {

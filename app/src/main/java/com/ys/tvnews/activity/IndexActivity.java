@@ -21,8 +21,8 @@ public class IndexActivity extends FragmentActivity implements RadioGroup.OnChec
     private FragmentManager manager;
     private NewsFragment newsFragment;      //新闻模块
     private TimeFragment timeFragment;      //时间模块
-    private TVFragment tvFragment;          //电视模块
-    private ListenTVFragment listenTVFragment;  //听电视模块
+    private TVFragment tvFragment;          //地图模块
+    private ListenTVFragment listenTVFragment;  //推送背部原理模块
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

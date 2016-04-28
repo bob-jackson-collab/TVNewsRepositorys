@@ -436,12 +436,9 @@ public class NewsIndexFragment extends Fragment{
                         JSONArray itemList = null;
                         JSONObject data = null;
                         JSONArray bigImage = null;
-                        Log.e("type",type+"==============>>>");
                         if("6".equals(type+"")){
-                             Log.e("info","执行到了图解新闻这一块");
                              itemList = jsonObject.optJSONArray("itemList");
                         }else {
-                             Log.e("info",type+"执行到了这里");
                              data = jsonObject.getJSONObject("data");
                              itemList = data.optJSONArray("itemList");
                              bigImage = data.optJSONArray("bigImg");

@@ -20,6 +20,7 @@
         android:layout_marginTop="@dimen/activity_register_margintop"
         android:layout_marginLeft="@dimen/activity_register_marginleft"
         android:layout_marginRight="@dimen/activity_register_marginright"
+        android:inputType="numberPassword"
         android:background="@drawable/edit_shape"
         android:textColorHint="#66000000" />
     <EditText
@@ -30,6 +31,7 @@
         android:layout_marginTop="@dimen/activity_register_margintop"
         android:layout_marginLeft="@dimen/activity_register_marginleft"
         android:layout_marginRight="@dimen/activity_register_marginright"
+        android:inputType="numberPassword"
         android:background="@drawable/edit_shape"
         android:textColorHint="#66000000" />
 

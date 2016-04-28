@@ -4,9 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.lidroid.xutils.DbUtils;
@@ -28,7 +31,6 @@ import java.util.List;
  */
 public class CommentActivity extends BaseActivity implements View.OnClickListener{
 
-    private TitleViews mTitleView;
     private ListView comment_list_view;
     private EditText et_comment;
     private Button send_comment;
@@ -38,6 +40,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     private CommentAdapter mAdapter;
     private Date mDate;
     private SimpleDateFormat mSdf;
+    private ImageView img_comment_back;
 
     @Override
     protected int loadLayout() {
@@ -47,14 +50,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void findView() {
         mContext = CommentActivity.this;
-        mTitleView = new TitleViews(mContext);
-        mTitleView.setTitle("相关评论");
-        mTitleView.setBackClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommentActivity.this.finish();
-            }
-        });
+        img_comment_back = (ImageView) findViewById(R.id.img_comment_back);
         comment_list_view = (ListView) findViewById(R.id.comment_list_view);
         et_comment = (EditText) findViewById(R.id.et_comment);
         send_comment = (Button) findViewById(R.id.send_comment);
@@ -84,6 +80,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         });
 
         send_comment.setOnClickListener(this);
+        img_comment_back.setOnClickListener(this);
     }
 
     @Override
@@ -91,14 +88,21 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         mDbUtils = MyApplication.getDbInstance();
         list_comment = new ArrayList<>();
         mAdapter = new CommentAdapter(CommentActivity.this);
+        mSdf = new SimpleDateFormat("hh:mm:ss");
        //从数据库中得到评论列表
         try {
             list_comment = mDbUtils.findAll(CommentBean.class);
         } catch (DbException e) {
             e.printStackTrace();
         }
-        comment_list_view.setAdapter(mAdapter);
-        mAdapter.addAllList(list_comment);
+        if(list_comment!=null) {
+            comment_list_view.setAdapter(mAdapter);
+            mAdapter.addAllList(list_comment);
+        }else{
+            Log.e("info","执行到了这个地方");
+            View emptyView = LayoutInflater.from(CommentActivity.this).inflate(R.layout.comment_empty_view,null);
+            comment_list_view.setEmptyView(emptyView);
+        }
         //    list_comment.add
     }
 
@@ -115,6 +119,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 commentBean.setUserName("yangsong");
                 commentBean.setLike("0");
                 commentBean.setUnLike("0");
+                mDate = new Date();
                 commentBean.setComment_time(mSdf.format(mDate));
                 commentBean.setComment(et_comment.getText().toString());
                 et_comment.setText(null);
@@ -125,6 +130,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 }
                 list_comment.add(commentBean);
                 mAdapter.addAllList(list_comment);
+                break;
+            case R.id.img_comment_back:
+                this.finish();
                 break;
             default : break;
         }

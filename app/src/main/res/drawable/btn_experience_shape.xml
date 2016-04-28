@@ -6,6 +6,8 @@
 
     </corners>
 
+    <solid
+        android:color="#14d212"/>
     <stroke
         android:width="1dp"
         android:color="@color/colorPrimary">

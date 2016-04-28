@@ -211,6 +211,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                               Intent register_intent = new Intent(mContext,RegisterNextActivity.class);
                                register_intent.putExtra("phone",phone);
                                startActivity(register_intent);
+                               RegisterActivity.this.finish();
                            }else{
                                showToast(msg.getString("text"));
                            }

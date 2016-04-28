@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.baidu.location.BDNotifyListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
@@ -66,6 +68,8 @@ public class TVFragment extends Fragment implements View.OnClickListener{
     private MyPoiSearchListener searchListener;
     private MyOrientationListener myOrientationListener;
     private float mCurrentX;
+    private Vibrator mVibrator01;
+    private NotifyLister mNotifyLister;
 
     @Nullable
     @Override
@@ -84,6 +88,8 @@ public class TVFragment extends Fragment implements View.OnClickListener{
         mPoiSearch = PoiSearch.newInstance();
         searchListener = new MyPoiSearchListener();
         mPoiSearch.setOnGetPoiSearchResultListener(searchListener);
+        mNotifyLister = new NotifyLister();
+        mVibrator01 = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     private void setListener(){
@@ -102,7 +108,7 @@ public class TVFragment extends Fragment implements View.OnClickListener{
         locationClient = new LocationClient(getActivity());
         locationListener = new MyLocationListener();
         locationClient.registerLocationListener(locationListener);
-
+        locationClient.registerNotify(mNotifyLister);
         LocationClientOption option = new LocationClientOption();
         option.setCoorType("bd09ll");
         option.setIsNeedAddress(true);
@@ -166,6 +172,7 @@ public class TVFragment extends Fragment implements View.OnClickListener{
     public void onPause() {
         super.onPause();
         mapView.onPause();
+        locationClient.removeNotifyEvent(mNotifyLister);
     }
 
     @Override
@@ -196,22 +203,6 @@ public class TVFragment extends Fragment implements View.OnClickListener{
 
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
-            Log.e("===============",bdLocation.getAddrStr());
-            //推送自己所在位置的信息
-            NotificationManager manager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
-            RemoteViews remoteView = new RemoteViews(getActivity().getPackageName(),R.layout.notification);
-            remoteView.setTextViewText(R.id.notify_content,bdLocation.getAddrStr());
-            Intent intent = new Intent(getActivity(), PushNews.class);
-            PushNews pushNews = new PushNews();
-            pushNews.setMessage(bdLocation.getAddrStr());
-            intent.putExtra("pushNews",pushNews);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(),0,intent,0);
-            builder.setContent(remoteView).setShowWhen(true).setTicker("消息推送").setContentIntent(pendingIntent);
-            Notification notification = builder.build();
-            manager.notify(100,notification);
-
-
             MyLocationData data = new MyLocationData.Builder()//
                     .direction(mCurrentX)// // 此处设置开发者获取到的方向信息，顺时针0-360
                     .accuracy(bdLocation.getRadius())//
@@ -237,6 +228,8 @@ public class TVFragment extends Fragment implements View.OnClickListener{
                 Toast.makeText(getActivity(), bdLocation.getAddrStr(),
                         Toast.LENGTH_SHORT).show();
             }
+            //4个参数代表要位置提醒的点的坐标，具体含义依次为：纬度，经度，距离范围，坐标系类型(gcj02,gps,bd09,bd09ll)
+            mNotifyLister.SetNotifyLocation(latitude,longitude,3000,"gps");
         }
     }
 
@@ -286,4 +279,12 @@ public class TVFragment extends Fragment implements View.OnClickListener{
 
         }
     }
+
+    //BDNotifyListner实现
+    public class NotifyLister extends BDNotifyListener {
+        public void onNotify(BDLocation mlocation, float distance){
+            mVibrator01.vibrate(1000);//振动提醒已到设定位置附近
+        }
+    }
+
 }

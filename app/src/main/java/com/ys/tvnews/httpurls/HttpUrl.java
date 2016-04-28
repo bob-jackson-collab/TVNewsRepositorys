@@ -34,5 +34,9 @@ public class HttpUrl {
      */
     public static String VERIFICATIONCODE = host + "checkSmscode_User.action";
 
+    /**
+     * 时间轴
+     */
+    public static String TIMENEWSURL = "http://chuang.36kr.com/api/actapply?page=1&pageSize=12";
 
 }
