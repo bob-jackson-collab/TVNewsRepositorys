@@ -13,6 +13,7 @@ import com.ys.tvnews.R;
 import com.ys.tvnews.application.MyApplication;
 import com.ys.tvnews.bean.TimeNewsBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ public class TimeNewsAdapter extends BaseAdapter{
     private BitmapUtils bitmapUtils;
 
     public TimeNewsAdapter(Context context){
+        list_time_news = new ArrayList<>();
         this.context = context;
         bitmapUtils = new BitmapUtils(context);
     }
@@ -58,7 +60,7 @@ public class TimeNewsAdapter extends BaseAdapter{
         }else{
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.tv_time.setText(list_time_news.get(position).getCreateTime());
+        holder.tv_time.setText(list_time_news.get(position).getCreateTime().substring(0,8));
         holder.tv_title.setText(list_time_news.get(position).getDescription());
         bitmapUtils.display(holder.image2,list_time_news.get(position).getListImageUrl());
         return convertView;

@@ -3,11 +3,17 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/title" />
+    <com.ys.tvnews.views.TitleViews
+        android:id="@+id/time_titles"
+        android:layout_width="match_parent"
+        android:layout_height="55dp">
+
+    </com.ys.tvnews.views.TitleViews>
     <ListView
         android:id="@+id/time_listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:divider="#ffffff">
 
     </ListView>
 </LinearLayout>

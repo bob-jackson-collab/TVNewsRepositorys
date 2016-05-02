@@ -1,6 +1,7 @@
 package com.ys.tvnews.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +20,7 @@ import com.ys.tvnews.R;
 import com.ys.tvnews.adapter.CommentAdapter;
 import com.ys.tvnews.application.MyApplication;
 import com.ys.tvnews.bean.CommentBean;
+import com.ys.tvnews.utils.ShareUtils;
 import com.ys.tvnews.views.TitleViews;
 
 import java.text.SimpleDateFormat;
@@ -107,6 +109,24 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            list_comment = mDbUtils.findAll(CommentBean.class);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if(list_comment!=null) {
+            comment_list_view.setAdapter(mAdapter);
+            mAdapter.addAllList(list_comment);
+        }else{
+            Log.e("info","执行到了这个地方");
+            View emptyView = LayoutInflater.from(CommentActivity.this).inflate(R.layout.comment_empty_view,null);
+            comment_list_view.setEmptyView(emptyView);
+        }
+    }
+
+    @Override
     protected void reqServer() {
 
     }
@@ -115,21 +135,25 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.send_comment:
-                CommentBean commentBean = new CommentBean();
-                commentBean.setUserName("yangsong");
-                commentBean.setLike("0");
-                commentBean.setUnLike("0");
-                mDate = new Date();
-                commentBean.setComment_time(mSdf.format(mDate));
-                commentBean.setComment(et_comment.getText().toString());
-                et_comment.setText(null);
-                try {
-                    mDbUtils.save(commentBean);
-                } catch (DbException e) {
-                    e.printStackTrace();
+                if(ShareUtils.getUserName(mContext)==null){
+                    CommentActivity.this.startActivity(new Intent(CommentActivity.this,LoginActivity.class));
+                }else {
+                    CommentBean commentBean = new CommentBean();
+                    commentBean.setUserName(ShareUtils.getUserName(mContext));
+                    commentBean.setLike("0");
+                    commentBean.setUnLike("0");
+                    mDate = new Date();
+                    commentBean.setComment_time(mSdf.format(mDate));
+                    commentBean.setComment(et_comment.getText().toString());
+                    et_comment.setText(null);
+                    try {
+                        mDbUtils.save(commentBean);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                    list_comment.add(commentBean);
+                    mAdapter.addAllList(list_comment);
                 }
-                list_comment.add(commentBean);
-                mAdapter.addAllList(list_comment);
                 break;
             case R.id.img_comment_back:
                 this.finish();

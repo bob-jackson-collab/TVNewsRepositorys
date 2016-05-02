@@ -84,7 +84,7 @@ public class MyApplication extends Application{
     /**
      * 退出应用程序所做的操作
      */
-    public void exit(){
+    public static void exit(){
         for(Activity activity:list_activity){
             if(activity!=null){
                 activity.finish();

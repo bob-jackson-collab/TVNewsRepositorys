@@ -73,7 +73,7 @@ public class MyJPushReceiver extends BroadcastReceiver{
             // 在这里可以自己写代码去定义用户点击后的行为
             Intent news_intent = new Intent(context, PushNewsActivity.class);  //自定义打开的界面
             news_intent.putExtra("pushNews",pushNews);
-            news_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //news_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(news_intent);
         } else {
             Log.d(TAG, "Unhandled intent - " + intent.getAction());

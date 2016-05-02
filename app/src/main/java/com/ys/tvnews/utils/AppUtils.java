@@ -23,6 +23,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.ys.tvnews.R;
@@ -235,4 +236,25 @@ public class AppUtils {
 			systemBarTintManager.setTintAlpha(150);
 		}
 	}
+
+	/**
+	 * 让软件盘出现
+	 */
+	public static void showSoftBoard(Context context){
+
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);
+	}
+
+	/**
+	 * 让软键盘消失
+	 */
+
+	public static void hideSoftBoard(Context context){
+
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+
 }

@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.KeyEvent;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.ys.tvnews.R;
+import com.ys.tvnews.application.MyApplication;
 import com.ys.tvnews.fragment.ListenTVFragment;
 import com.ys.tvnews.fragment.NewsFragment;
 import com.ys.tvnews.fragment.TVFragment;
@@ -23,6 +26,7 @@ public class IndexActivity extends FragmentActivity implements RadioGroup.OnChec
     private TimeFragment timeFragment;      //时间模块
     private TVFragment tvFragment;          //地图模块
     private ListenTVFragment listenTVFragment;  //推送背部原理模块
+    private long mExitTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,5 +129,19 @@ public class IndexActivity extends FragmentActivity implements RadioGroup.OnChec
             default:
                 break;
         }
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                Object mHelperUtils;
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                MyApplication.exit();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

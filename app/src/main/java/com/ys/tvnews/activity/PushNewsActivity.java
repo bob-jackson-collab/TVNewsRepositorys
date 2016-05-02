@@ -91,7 +91,7 @@ public class PushNewsActivity extends Activity {
         titleBuilder.setLeftTextOrImageListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               PushNewsActivity.this.startActivity(new Intent(PushNewsActivity.this,IndexActivity.class));
+               PushNewsActivity.this.finish();
             }
         });
         titleBuilder.setRightTextOrImageListener(new View.OnClickListener() {

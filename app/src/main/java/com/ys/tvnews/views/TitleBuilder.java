@@ -155,6 +155,11 @@ public class TitleBuilder {
         return this;
     }
 
+    public TitleBuilder setLeftImageVisibity(int flag){
+        left_imageview.setVisibility(flag);
+        return this;
+    }
+
     /**
      * 左边文字按钮
      *

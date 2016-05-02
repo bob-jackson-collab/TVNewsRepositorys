@@ -64,8 +64,9 @@ public class NewsIndexFragment extends Fragment{
      * 1、下拉刷新
      * 2、上拉刷新
      */
-    private  String pull_down_refresh_flag = "1";
-    private  String pull_up_refresh_flag = "2";
+    private  String pull_down_refresh_flag = "1";    //下拉刷新
+
+    private  String pull_up_refresh_flag = "2";      //上啦加载
 
     private int toutuNum = 3;  //分页变量
 
@@ -79,7 +80,9 @@ public class NewsIndexFragment extends Fragment{
 
     private TextView tv_adv;  //广告标题栏
     private ViewPager adv_viewPager;
+
     private int type;   //通过判断传过来的参数类型来返回不同的视图
+
     private AdvPagerAdapter advPagerAdapter;   //广告适配器
     private NewsAdapter newsAdapter;           //新闻内容适配器
     private List<ImageView> list_adv_image;    //广告图的集合
@@ -87,14 +90,14 @@ public class NewsIndexFragment extends Fragment{
 
     private List<AdvBean> list_advBean;
     private List<NewsBean> list_newsBean;
+    private List<NewsBean> list_all_newsBean;
     List<TopicNews> list_topic_news = new ArrayList<>();
 
     private BitmapUtils bitmapUtils;
     private HttpUtils httpUtils = new HttpUtils();
-    private String news_url;  //新闻的url
-    //http://hot.news.cntv.cn/index.php?controller=list&action=getHandDataInfoNew&handdata_id=TDAT1372928688333145&n1=3&n2=20&toutuNum=3
-    // 设置轮播图轮播的handler
 
+    private String news_url;  //新闻的url
+/*
     private ScheduledExecutorService scheduledExecutorService;
     private int schedule_page;
     private Handler schedule_handler = new Handler(){
@@ -105,7 +108,7 @@ public class NewsIndexFragment extends Fragment{
                 adv_viewPager.setCurrentItem((Integer)msg.obj);
             }
         }
-    };
+    };*/
 
 
     @Nullable
@@ -164,9 +167,10 @@ public class NewsIndexFragment extends Fragment{
             listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
                 @Override
                 public void onRefresh(final PullToRefreshBase<ListView> refreshView) {
-
                     if (refreshView.isHeaderShown()) {
                         Log.e("info", "执行了下拉刷新");
+                        //setListViewLayoutProxy(true,false);
+                        refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(getRefreshTime());
                         pull_down_refresh_flag = "3";
                         final Handler refresh_down_handler = new Handler() {
 
@@ -177,8 +181,7 @@ public class NewsIndexFragment extends Fragment{
                                 }
                             }
                         };
-                        refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(getRefreshTime());
-                        setListViewLayoutProxy(true,false);
+
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -195,9 +198,11 @@ public class NewsIndexFragment extends Fragment{
                             }
                         }).start();
                     }
+
                     if (refreshView.isFooterShown()) {
                         Log.e("info", "执行了上啦加载");
                         pull_up_refresh_flag = "4";
+                        refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(getRefreshTime());
                         final Handler refresh_up_handler = new Handler() {
 
                             @Override
@@ -207,8 +212,6 @@ public class NewsIndexFragment extends Fragment{
                                 }
                             }
                         };
-                        refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(getRefreshTime());
-                        setListViewLayoutProxy(false,true);
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -278,17 +281,6 @@ public class NewsIndexFragment extends Fragment{
 
                 @Override
                 public void onPageScrollStateChanged(int state) {
-//                    switch (state) {
-//                        case ViewPager.SCROLL_STATE_DRAGGING:
-//                            handler.sendEmptyMessage(ImageHandler.MSG_KEEP_SILENT);
-//                            break;
-//                        case ViewPager.SCROLL_STATE_IDLE:
-//                            handler.sendEmptyMessageDelayed(ImageHandler.MSG_UPDATE_IMAGE,
-//                                    ImageHandler.MSG_DELAY);
-//                            break;
-//                        default:
-//                            break;
-//                    }
                }
             });
 
@@ -334,28 +326,6 @@ public class NewsIndexFragment extends Fragment{
                 adv_viewPager.setAdapter(advPagerAdapter);
             }
             adv_viewPager.setCurrentItem(list_adv_image.size()*100);
-
-
-//            scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    Log.e("========>>>>>","执行了图片轮播");
-//                    schedule_page = 0;
-//                    Message message = Message.obtain();
-//                    message.what = 2;
-//                    message.obj = schedule_page;
-//                    schedule_handler.sendMessage(message);
-//                    schedule_page++;
-//                    if(schedule_page>list_adv_image.size()){
-//                        schedule_page = 0;
-//                    }
-//
-//                }
-//            },0,1000, TimeUnit.MILLISECONDS);
-            //轮播图自动轮播
-//            handler.sendEmptyMessageDelayed(ImageHandler.MSG_UPDATE_IMAGE,
-//                    ImageHandler.MSG_DELAY);
             return headerView;
         }else{
             return null;
@@ -449,6 +419,8 @@ public class NewsIndexFragment extends Fragment{
                         if(itemList!=null) {
                             //得到新闻的结合
                             list_newsBean = JSON.parseArray(itemList.toString(), NewsBean.class);
+                            //将刷新的数据添加到总list集合中
+                            list_all_newsBean.addAll(list_newsBean);
                             Log.e("---------newsBean",list_newsBean.size()+"=====");
                             for(int i = 0;i<itemList.length();i++){
                                 NewsBean newsBean = list_newsBean.get(i);
@@ -460,6 +432,11 @@ public class NewsIndexFragment extends Fragment{
                             for(int i = 0;i<list_newsBean.size();i++){
                                 if(list_newsBean.get(i).getItemTitle().equals("如您看到此提示，请升级客户端到最新版本")){
                                     list_newsBean.remove(i);
+                                }
+                            }
+                            for(int i = 0;i<list_all_newsBean.size();i++){
+                                if(list_all_newsBean.get(i).getItemTitle().equals("如您看到此提示，请升级客户端到最新版本")){
+                                    list_all_newsBean.remove(i);
                                 }
                             }
                         }
@@ -477,20 +454,22 @@ public class NewsIndexFragment extends Fragment{
 
                         //得到pullRefreshListView中的listView
                         ListView refreshableView = listView.getRefreshableView();
-                        listView.setAdapter(newsAdapter);
+                        refreshableView.setAdapter(newsAdapter);
 
                         Log.e("pull_up_refresh_flag",pull_up_refresh_flag+"------------------------.>");
                         //如果是下拉刷新 则用setList方法更新数据源 如果是上啦加载，则用addList方法更新数据源
                         if("1".equals(pull_down_refresh_flag)||"3".equals(pull_down_refresh_flag)){
                             newsAdapter.setList(list_newsBean);
-                        }else if("2".equals(pull_up_refresh_flag)||"4".equals(pull_up_refresh_flag)) {
+                        }
+
+                        if("2".equals(pull_up_refresh_flag)||"4".equals(pull_up_refresh_flag)) {
                             Log.e("info","shiyongle addList方法");
                             //给新闻内容设置数据源
-                            newsAdapter.addList(list_newsBean);
+                            newsAdapter.addList(list_all_newsBean);
                         }
                         //ListView添加头部视图
                         if(headerView!=null) {
-                            if("1".equals(pull_down_refresh_flag)) {
+                            if("1".equals(pull_down_refresh_flag) && "2".equals(pull_up_refresh_flag)) {
                                 Log.e("info","添加了头部");
                                 refreshableView.addHeaderView(headerView);
                             }
@@ -517,36 +496,31 @@ public class NewsIndexFragment extends Fragment{
     }
 
     private void loadData(){
-
-        //初始化定时周期执行的任务
-        scheduledExecutorService = Executors.newScheduledThreadPool(3);
-
+        list_all_newsBean = new ArrayList<>();
         bitmapUtils = new BitmapUtils(mContext);
         newsAdapter = new NewsAdapter(mContext,bitmapUtils);
         list_adv_image = new ArrayList<>();
         list_dots = new ArrayList<>();
         mDialog = (MyProgressDialog) MyProgressDialog.createLoadingDialog(mContext,"loading");
-
     }
-
     private void setListViewProperties(){
         View empty_view = LayoutInflater.from(getActivity()).inflate(R.layout.empty_view, null);
         listView.setEmptyView(empty_view);
         listView.setMode(PullToRefreshBase.Mode.BOTH);
-    }
+        ILoadingLayout loadingLayoutProx1 = listView.getLoadingLayoutProxy(true,false);
+        loadingLayoutProx1.setRefreshingLabel("正在刷新哦");
+        loadingLayoutProx1.setPullLabel("下拉刷新");
+        loadingLayoutProx1.setReleaseLabel("释放刷新");
+        loadingLayoutProx1.setLoadingDrawable(getResources().getDrawable(R.mipmap.xialashuaxin));
 
-    private void setListViewLayoutProxy(boolean flag1,boolean flag2){
-        ILoadingLayout loadingLayoutProxy = listView.getLoadingLayoutProxy(flag1, flag2);
-        loadingLayoutProxy.setLoadingDrawable(getResources().getDrawable(R.mipmap.xialashuaxin));
-        if(flag1==true&&flag2==false) {
-            loadingLayoutProxy.setRefreshingLabel("正在刷新哦");
-            loadingLayoutProxy.setPullLabel("下拉刷新");
-            loadingLayoutProxy.setReleaseLabel("释放刷新");
-        }else if(flag1==false&&flag2==true){
-            loadingLayoutProxy.setRefreshingLabel("正在刷新哦");
-            loadingLayoutProxy.setPullLabel("上啦加载");
-            loadingLayoutProxy.setReleaseLabel("释放刷新");
-        }
+        ILoadingLayout loadingLayoutProx2 = listView.getLoadingLayoutProxy(false,true);
+        loadingLayoutProx2.setRefreshingLabel("正在刷新哦");
+        loadingLayoutProx2.setPullLabel("上啦加载");
+        loadingLayoutProx2.setReleaseLabel("释放刷新");
+        loadingLayoutProx2.setLoadingDrawable(getResources().getDrawable(R.mipmap.xialashuaxin));
+
+
+        ILoadingLayout loadingLayoutProxy1 = listView.getLoadingLayoutProxy(true,false);
     }
 
     /**

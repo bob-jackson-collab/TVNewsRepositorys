@@ -45,6 +45,7 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import com.ys.tvnews.R;
 import com.ys.tvnews.activity.MyOrientationListener;
 import com.ys.tvnews.bean.PushNews;
+import com.ys.tvnews.utils.AppUtils;
 
 import java.util.List;
 
@@ -245,6 +246,8 @@ public class TVFragment extends Fragment implements View.OnClickListener{
                             .city("北京")
                             .keyword(news_name)
                             .pageNum(10));
+                    et_seach_news.setText(null);
+                    AppUtils.hideSoftBoard(getActivity());
                 }else{
                     Toast.makeText(getActivity(), "请输入您要查询的地点", Toast.LENGTH_SHORT).show();
                     return;

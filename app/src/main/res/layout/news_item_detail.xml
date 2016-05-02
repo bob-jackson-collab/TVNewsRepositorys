@@ -16,6 +16,16 @@
             android:layout_alignParentLeft="true"
             android:scaleType="centerInside"
             android:src="@mipmap/base_header_back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="新闻详情"
+            android:paddingRight="15dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="#cccccc"
+
+            android:layout_toStartOf="@+id/item_detail_share" />
         <ImageView
             android:id="@+id/item_detail_share"
             android:layout_width="50dp"

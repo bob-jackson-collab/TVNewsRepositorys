@@ -34,6 +34,7 @@ import com.ys.tvnews.bean.TimeNewsBean;
 import com.ys.tvnews.bean.TopicNews;
 import com.ys.tvnews.sqlite.DBHelper;
 import com.ys.tvnews.sqlite.OperateDB;
+import com.ys.tvnews.utils.ShareUtils;
 
 
 /**
@@ -67,10 +68,10 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
         topic_news = (TopicNews) intent.getSerializableExtra("topic_news");
         collectBean = (CollectBean) intent.getSerializableExtra("collectBean");
         timeNewsBean = (TimeNewsBean) intent.getSerializableExtra("timeNewsBean");
-        if(news == null){
-            detailUrl = advNews.getDetailUrl();
-        }else if(advNews == null){
+        if(news != null){
             detailUrl = news.getDetailUrl();
+        }else if(advNews != null){
+            detailUrl = advNews.getDetailUrl();
         }else if(topic_news!=null){
             detailUrl = topic_news.getWeburl();
         }else if(collectBean!=null){
@@ -191,14 +192,31 @@ public class NewsDetailActivity extends Activity implements View.OnClickListener
                this.finish();
                break;
            case R.id.item_detail_edit:
+               Intent edit_intent = new Intent(NewsDetailActivity.this,CommentActivity.class);
+               if(ShareUtils.getUserName(NewsDetailActivity.this)!=null){
+                   startActivity(edit_intent);
+               }else{
+                   Toast.makeText(NewsDetailActivity.this,"您还没有登录哦",Toast.LENGTH_SHORT).show();
+                   startActivity(new Intent(NewsDetailActivity.this,LoginActivity.class));
+               }
                break;
            case R.id.item_detail_share:
                showShare();
                break;
            case R.id.item_detail_fav:
-               String imgUrl1 = news.getImgUrl1();
-               String detailUrl = news.getDetailUrl();
-               String itemTitle = news.getItemTitle();
+               String imgUrl1 = null;
+               String detailUrl = null;
+               String itemTitle = null;
+               if(news!=null) {
+                    imgUrl1 = news.getImgUrl1();
+                    detailUrl = news.getDetailUrl();
+                    itemTitle = news.getItemTitle();
+               }
+               if(timeNewsBean!=null){
+                    imgUrl1 = timeNewsBean.getListImageUrl();
+                    detailUrl = timeNewsBean.getLink();
+                    itemTitle = timeNewsBean.getDescription();
+               }
                Log.e("info", "点击了收藏");
 
                ContentValues values = new ContentValues();
