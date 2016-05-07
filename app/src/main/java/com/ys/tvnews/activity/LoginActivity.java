@@ -64,7 +64,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
      * qq登录
      * @return
      */
-    private Tencent mTencent;
+    public static Tencent mTencent;
     public static QQAuth mQQAuth;
     public static String mAppid;
 

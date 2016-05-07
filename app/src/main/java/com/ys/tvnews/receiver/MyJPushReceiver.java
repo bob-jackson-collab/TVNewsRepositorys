@@ -27,11 +27,9 @@ public class MyJPushReceiver extends BroadcastReceiver{
     private DbUtils dbUtils;
     @Override
     public void onReceive(Context context, Intent intent) {
-
         pushNews = new PushNews();
         Bundle bundle = intent.getExtras();
         Log.d(TAG, "onReceive - " + intent.getAction());
-
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
             //SDK 向 JPush Server 注册所得到的注册 全局唯一的 ID ，可以通过此 ID 向对应的客户端发送消息和通知。
             message = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);

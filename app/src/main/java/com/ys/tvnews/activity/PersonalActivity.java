@@ -164,6 +164,11 @@ public class PersonalActivity extends BaseActivity implements View.OnClickListen
                     mContext.startActivity(new Intent(PersonalActivity.this,LoginActivity.class));
                     PersonalActivity.this.finish();
                 }
+                if("注销".equals(titleViews.getRightTextView().getText())){
+                    LoginActivity.mTencent.logout(mContext);
+                    mContext.startActivity(new Intent(PersonalActivity.this,LoginActivity.class));
+                    PersonalActivity.this.finish();
+                }
             }
         });
     }
